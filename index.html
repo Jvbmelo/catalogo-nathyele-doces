@@ -195,15 +195,18 @@
   .nav-track {
     display: flex;
     gap: var(--space-2);
-    padding: var(--space-3) var(--space-4);
+    padding: 16px;                 /* 16px em todos os lados (esq/dir = 16px) */
     overflow-x: auto;
-    scrollbar-width: none;
-    scroll-snap-type: x proximity;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    scrollbar-width: none;         /* esconde scrollbar no Firefox */
+    -ms-overflow-style: none;      /* esconde scrollbar no IE/Edge antigo */
   }
-  .nav-track::-webkit-scrollbar { display: none; }
+  .nav-track::-webkit-scrollbar { display: none; } /* esconde scrollbar no Chrome/Safari */
+  /* spacer: garante 16px após a última aba (overflow-x ignora padding-right ao rolar) */
+  .nav-track::after { content: ''; flex: 0 0 16px; }
   .nav-tab {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
+    flex: 0 0 auto;               /* flex-shrink: 0 — não comprime */
     padding: 10px 18px;
     border-radius: var(--radius-full);
     background: var(--creme);
@@ -261,7 +264,7 @@
   .card {
     display: flex;
     gap: var(--space-4);
-    padding: var(--space-3);
+    padding: 0;
     background: var(--creme);
     border: 1px solid var(--cacau-08);
     border-radius: var(--radius-lg);
@@ -273,8 +276,9 @@
   .product-image {
     flex: 0 0 96px;
     width: 96px;
-    height: 96px;
-    border-radius: var(--radius-md);
+    align-self: stretch;          /* ocupa 100% da altura do card */
+    min-height: 96px;             /* nunca menor que 96px */
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg); /* acompanha o canto do card */
     display: grid;
     place-items: center;
     color: var(--creme);
@@ -295,7 +299,7 @@
   .hue-maracuja { background: linear-gradient(135deg, #F0C66B, #C98E3E); }
   .hue-ninho    { background: linear-gradient(135deg, #E8D5B0, #A8835A); }
 
-  .product-info { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
+  .product-info { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; min-width: 0; padding: var(--space-3) var(--space-3) var(--space-3) 0; }
   .product-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
   .product-name {
     font-family: var(--ff-display);
@@ -361,26 +365,6 @@
   }
   .add-btn:hover { background: #1c0f08; }
   .add-btn:active { transform: scale(0.92); }
-
-  /* Badge */
-  .badge {
-    position: absolute;
-    top: -8px;
-    left: var(--space-3);
-    background: var(--rose);
-    color: var(--cacau-100);
-    font-family: var(--ff-body);
-    font-weight: 600;
-    font-size: 10px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: var(--radius-full);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    box-shadow: 0 2px 6px rgba(44,24,16,0.1);
-  }
 
   /* ============================================================
      BARRA "VER SACOLA"
@@ -852,70 +836,66 @@
 
   const CATEGORIES = [
     { id: 'brigadeiros', label: 'Brigadeiros', note: 'Pedido mínimo: 20 unidades por sabor' },
-    { id: 'pudins',      label: 'Pudins',      note: 'Formato família (serve 8 a 10 pessoas) disponível sob consulta' },
     { id: 'bombons',     label: 'Bombons',     note: 'Mínimo 12 unidades · consumo recomendado em até 24h' },
-    { id: 'kits',        label: 'Kits & Caixas', note: 'Kits personalizados para eventos e empresas — consulte condições' }
+    { id: 'pudins',      label: 'Pudins',      note: 'Formato família (serve 8 a 10 pessoas) disponível sob consulta' },
+    { id: 'sobremesas',  label: 'Sobremesas & Taças', note: 'Sobremesas individuais feitas sob encomenda' }
   ];
 
   const PRODUCTS = [
-    // ---- BRIGADEIROS ----
-    {
-      id: 'brig-belga', categoryId: 'brigadeiros', name: 'Brigadeiro Belga',
-      description: 'Feito com chocolate belga puro, textura aveludada e sabor intenso que derrete na boca.',
-      price: 5.50, unit: 'un', minQty: 20,
-      badge: 'Mais pedido', badgeIcon: '★',
-      detail: null, image: null, placeholderHue: 'cacau'
-    },
-    {
-      id: 'brig-pistache', categoryId: 'brigadeiros', name: 'Pistache',
-      description: 'Pistache tostado artesanal com toque de flor de sal. Sofisticado e surpreendente.',
-      price: 6.00, unit: 'un', minQty: 20,
-      badge: null, badgeIcon: null,
-      detail: null, image: null, placeholderHue: 'limao'
-    },
-    {
-      id: 'brig-limao', categoryId: 'brigadeiros', name: 'Limão Siciliano',
-      description: 'Recheio cremoso e cítrico com raspas naturais de limão siciliano.',
-      price: 5.50, unit: 'un', minQty: 20,
-      badge: null, badgeIcon: null,
-      detail: null, image: null, placeholderHue: 'limao'
-    },
-    {
-      id: 'brig-maracuja', categoryId: 'brigadeiros', name: 'Maracujá',
-      description: 'Recheio tropical cítrico com borda crocante. Equilíbrio entre doce e azedo.',
-      price: 5.50, unit: 'un', minQty: 20,
-      badge: null, badgeIcon: null,
-      detail: null, image: null, placeholderHue: 'maracuja'
-    },
-    {
-      id: 'brig-morango', categoryId: 'brigadeiros', name: 'Morango',
-      description: 'Fruta fresca com chocolate ao leite. Clássico que encanta adultos e crianças.',
-      price: 5.50, unit: 'un', minQty: 20,
-      badge: null, badgeIcon: null,
-      detail: null, image: null, placeholderHue: 'morango'
-    },
+    // ---- BRIGADEIROS ---- (cada card usa a foto real correspondente em /images)
     {
       id: 'brig-ninho', categoryId: 'brigadeiros', name: 'Ninho com Nutella',
       description: 'O clássico com recheio duplo irresistível. Cremoso e favorito das crianças.',
       price: 6.00, unit: 'un', minQty: 20,
-      badge: null, badgeIcon: null,
-      detail: null, image: null, placeholderHue: 'ninho'
-    },
-
-    // ---- PUDINS ----
-    {
-      id: 'pudim-classico', categoryId: 'pudins', name: 'Pudim Clássico',
-      description: 'Baunilha artesanal com calda de caramelo dourado. Textura perfeita, sabor de memória.',
-      price: 8.00, unit: 'un', minQty: null,
-      badge: null, badgeIcon: null,
-      detail: null, image: null, placeholderHue: 'limao'
+      detail: null, image: 'images/Ninho com Nutella.jpeg', placeholderHue: 'ninho'
     },
     {
-      id: 'pudim-chocolate', categoryId: 'pudins', name: 'Pudim de Chocolate',
-      description: 'Intenso, cremoso, com calda escura de chocolate amargo.',
-      price: 9.00, unit: 'un', minQty: null,
-      badge: null, badgeIcon: null,
-      detail: null, image: null, placeholderHue: 'cacau'
+      id: 'brig-morango', categoryId: 'brigadeiros', name: 'Morango',
+      description: 'Fruta fresca com chocolate ao leite. Clássico que encanta adultos e crianças.',
+      price: 6.00, unit: 'un', minQty: 20,
+      detail: null, image: 'images/Morango.jpeg', placeholderHue: 'morango'
+    },
+    {
+      id: 'brig-ao-leite', categoryId: 'brigadeiros', name: 'Ao Leite',
+      description: 'Brigadeiro tradicional de chocolate ao leite, cremoso e na medida certa do doce.',
+      price: 6.00, unit: 'un', minQty: 20,
+      detail: null, image: 'images/Ao leite.jpeg', placeholderHue: 'cacau'
+    },
+    {
+      id: 'brig-prestigio', categoryId: 'brigadeiros', name: 'Prestígio',
+      description: 'Coco fresco envolto em chocolate. O equilíbrio perfeito entre cremoso e marcante.',
+      price: 6.00, unit: 'un', minQty: 20,
+      detail: null, image: 'images/Prestígio.jpeg', placeholderHue: 'cacau'
+    },
+    {
+      id: 'brig-ferreiro', categoryId: 'brigadeiros', name: 'Ferreiro',
+      description: 'Inspirado no clássico bombom: chocolate, avelã e crocante de wafer.',
+      price: 6.00, unit: 'un', minQty: 20,
+      detail: null, image: 'images/Ferreiro.jpeg', placeholderHue: 'ninho'
+    },
+    {
+      id: 'brig-dois-amores', categoryId: 'brigadeiros', name: 'Dois Amores',
+      description: 'A união perfeita do chocolate ao leite com o branco. Dois sabores em cada mordida.',
+      price: 6.00, unit: 'un', minQty: 20,
+      detail: null, image: 'images/Dois amores.jpeg', placeholderHue: 'rose'
+    },
+    {
+      id: 'brig-romeu-julieta', categoryId: 'brigadeiros', name: 'Romeu e Julieta',
+      description: 'Goiabada cremosa com toque de queijo. O encontro mais brasileiro dos sabores.',
+      price: 6.00, unit: 'un', minQty: 20,
+      detail: null, image: 'images/romeu e julieta.jpeg', placeholderHue: 'morango'
+    },
+    {
+      id: 'brig-camafeu', categoryId: 'brigadeiros', name: 'Camafeu',
+      description: 'Brigadeiro de nozes com noz inteira, delicado e sofisticado.',
+      price: 6.00, unit: 'un', minQty: 20,
+      detail: null, image: 'images/Camafeu.jpeg', placeholderHue: 'ninho'
+    },
+    {
+      id: 'brig-maracuja', categoryId: 'brigadeiros', name: 'Gota de Maracujá',
+      description: 'Recheio tropical cítrico com borda crocante. Equilíbrio entre doce e azedo.',
+      price: 6.00, unit: 'un', minQty: 20,
+      detail: null, image: 'images/Gota de maracujá.jpeg', placeholderHue: 'maracuja'
     },
 
     // ---- BOMBONS ----
@@ -923,31 +903,36 @@
       id: 'bombom-morango', categoryId: 'bombons', name: 'Bombom de Morango',
       description: 'Morango fresco selecionado coberto com chocolate belga temperado.',
       price: 7.00, unit: 'un', minQty: 12,
-      badge: 'Carro-chefe', badgeIcon: '♥',
-      detail: null, image: null, placeholderHue: 'morango'
+      detail: null, image: 'images/Bombom de Morango.jpeg', placeholderHue: 'morango'
     },
 
-    // ---- KITS & CAIXAS ----
+    // ---- PUDINS ----
     {
-      id: 'kit-presente', categoryId: 'kits', name: 'Kit Presente',
-      description: 'Caixinha com 4 brigadeiros sortidos em acetato com laço. Ideal para presentes.',
-      price: 28.00, unit: 'kit', minQty: null,
-      badge: null, badgeIcon: null,
-      detail: '4 brigadeiros à escolha', image: null, placeholderHue: 'rose'
+      id: 'pudim-classico', categoryId: 'pudins', name: 'Pudim',
+      description: 'Baunilha artesanal com calda de caramelo dourado. Textura perfeita, sabor de memória.',
+      price: 8.00, unit: 'un', minQty: null,
+      detail: null, image: 'images/Pudim.jpeg', placeholderHue: 'limao'
+    },
+
+    // ---- SOBREMESAS & TAÇAS ----
+    // NOTE: preços abaixo são padrão estimado — ajuste conforme sua tabela real.
+    {
+      id: 'sobremesa-taca-ninho', categoryId: 'sobremesas', name: 'Taça Mousse de Ninho',
+      description: 'Mousse aerada de leite ninho com morangos e raspas de chocolate. Servida em taça.',
+      price: 16.00, unit: 'un', minQty: null,
+      detail: 'Porção individual', image: 'images/Taça mousse de ninho com morangos e chocolate.jpeg', placeholderHue: 'ninho'
     },
     {
-      id: 'caixa-50', categoryId: 'kits', name: 'Caixa Centro 50un',
-      description: 'Caixa com 50 brigadeiros sortidos. Para mesas de festa e eventos.',
-      price: 220.00, unit: 'caixa', minQty: null,
-      badge: null, badgeIcon: null,
-      detail: '50 brigadeiros', image: null, placeholderHue: 'rose'
+      id: 'sobremesa-pavlova', categoryId: 'sobremesas', name: 'Pavlova de Frutas Vermelhas',
+      description: 'Merengue crocante por fora e macio por dentro, com chantilly e frutas vermelhas frescas.',
+      price: 18.00, unit: 'un', minQty: null,
+      detail: 'Porção individual', image: 'images/Pavilova de frutas vermelhas.jpeg', placeholderHue: 'rose'
     },
     {
-      id: 'caixa-100', categoryId: 'kits', name: 'Caixa Grande 100un',
-      description: 'Caixa com 100 brigadeiros para grandes eventos e casamentos.',
-      price: 420.00, unit: 'caixa', minQty: null,
-      badge: null, badgeIcon: null,
-      detail: '100 brigadeiros', image: null, placeholderHue: 'cacau'
+      id: 'sobremesa-cachepo', categoryId: 'sobremesas', name: 'Cachepô de Chocolate com Cereja',
+      description: 'Casquinha de chocolate recheada com creme e cereja. Servido em cachepô individual.',
+      price: 15.00, unit: 'un', minQty: null,
+      detail: 'Porção individual', image: 'images/Cachepô de chocolate com cereja.jpeg', placeholderHue: 'cacau'
     }
   ];
 
@@ -1031,9 +1016,6 @@
   }
 
   function renderProductCard(product) {
-    const badgeHtml = product.badge
-      ? `<span class="badge">${product.badgeIcon ? escapeHtml(product.badgeIcon) + ' ' : ''}${escapeHtml(product.badge)}</span>`
-      : '';
     const detailHtml = product.detail
       ? `<div class="product-detail">${escapeHtml(product.detail)}</div>`
       : '';
@@ -1043,7 +1025,6 @@
 
     return `
       <article class="card" data-product-id="${escapeHtml(product.id)}">
-        ${badgeHtml}
         ${renderImage(product)}
         <div class="product-info">
           <div class="product-top">
@@ -1282,7 +1263,12 @@
   }
   function setActiveTab(id) {
     document.querySelectorAll('.nav-tab').forEach(t => {
-      t.classList.toggle('is-active', t.getAttribute('data-category-id') === id);
+      const isActive = t.getAttribute('data-category-id') === id;
+      t.classList.toggle('is-active', isActive);
+      // centraliza a aba ativa na barra de navegação (clique e scroll da página)
+      if (isActive) {
+        t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
     });
   }
   function setupScrollSpy() {
