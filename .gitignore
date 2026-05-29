@@ -1,0 +1,25 @@
+# Windows / Google Drive cruft
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS cruft (caso o arquivo seja aberto em outro SO)
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editores / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs e temporários
+*.log
+*.tmp
+*.bak

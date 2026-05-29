@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#2C1810" />
+<title>Nathyele Doces — Cardápio</title>
+<meta name="description" content="Doceria artesanal de alto padrão em Aparecida de Goiânia. Brigadeiros, pudins, bombons e kits para presentear." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* ============================================================
+     TOKENS — paleta, tipografia, espaços, raios
+     ============================================================ */
+  :root {
+    --cacau-100: #2C1810;
+    --cacau-70: rgba(44,24,16,0.70);
+    --cacau-40: rgba(44,24,16,0.40);
+    --cacau-15: rgba(44,24,16,0.15);
+    --cacau-08: rgba(44,24,16,0.08);
+
+    --creme: #FAF6F1;
+    --linho: #ECE0CF;
+
+    --rose: #E8C5BC;
+    --rose-profundo: #C98E82;
+
+    --ff-display: 'Cormorant Garamond', Georgia, serif;
+    --ff-body: 'Manrope', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-full: 999px;
+
+    --transition: 0.2s ease;
+    --shadow-card: 0 2px 8px rgba(44,24,16,0.06);
+    --shadow-modal: 0 -8px 32px rgba(44,24,16,0.18);
+    --shadow-fab: 0 4px 12px rgba(44,24,16,0.18);
+
+    --nav-h: 56px;
+    --bag-bar-h: 64px;
+  }
+
+  /* ============================================================
+     RESET + BASE
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--ff-body);
+    font-weight: 400;
+    color: var(--cacau-100);
+    background: var(--creme);
+    line-height: 1.55;
+    font-size: 15px;
+    min-height: 100vh;
+    padding-bottom: calc(var(--bag-bar-h) + env(safe-area-inset-bottom, 0px));
+    -webkit-font-smoothing: antialiased;
+  }
+  body.is-modal-open { overflow: hidden; }
+  img { display: block; max-width: 100%; }
+  button {
+    font-family: inherit;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:focus-visible, a:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--rose-profundo);
+    outline-offset: 2px;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ============================================================
+     TIPOGRAFIA UTILITÁRIA
+     ============================================================ */
+  .t-display { font-family: var(--ff-display); font-weight: 500; }
+  .t-italic { font-style: italic; }
+  .t-eyebrow {
+    font-family: var(--ff-body);
+    font-weight: 600;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: var(--cacau-70);
+  }
+
+  /* ============================================================
+     FILETE ROSÉ FIXO NO TOPO
+     ============================================================ */
+  .top-filet {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--rose-profundo);
+    z-index: 30;
+  }
+
+  /* ============================================================
+     LOGO
+     ============================================================ */
+  .logo {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    text-align: center;
+  }
+  .logo-name {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 56px;
+    color: var(--cacau-100);
+    letter-spacing: -0.03em;
+    text-align: center;
+  }
+  .logo-tm {
+    font-family: var(--ff-body);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 8px;
+    vertical-align: super;
+    color: inherit;
+    margin-left: 2px;
+    letter-spacing: 0;
+  }
+  .logo-sub {
+    font-family: var(--ff-body);
+    font-weight: 600;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--cacau-100);
+    text-align: center;
+    margin-top: 16px;
+    /* compensa o letter-spacing à direita do último glyph para centralizar opticamente */
+    padding-left: 3px;
+  }
+  .logo.on-dark .logo-name,
+  .logo.on-dark .logo-sub { color: var(--creme); }
+
+  /* ============================================================
+     HEADER — fundo cacau + padrão diagonal de texto, capa editorial
+     ============================================================ */
+  .header {
+    position: relative;
+    padding: calc(var(--space-8) + 3px) var(--space-5) var(--space-8);
+    background-color: var(--cacau-100);
+    text-align: center;
+    overflow: hidden;
+  }
+  .header-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .header-tagline {
+    margin-top: var(--space-5);
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 17px;
+    color: var(--creme);
+    opacity: 0.85;
+    text-align: center;
+  }
+
+  /* ============================================================
+     NAV STICKY
+     ============================================================ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--creme);
+    border-bottom: 1px solid var(--cacau-08);
+  }
+  .nav-track {
+    display: flex;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    overflow-x: auto;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+  .nav-track::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    padding: 10px 18px;
+    border-radius: var(--radius-full);
+    background: var(--creme);
+    color: var(--cacau-100);
+    border: 1px solid var(--cacau-15);
+    font-family: var(--ff-body);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+  }
+  .nav-tab.is-active {
+    background: var(--cacau-100);
+    color: var(--creme);
+    border-color: var(--cacau-100);
+  }
+
+  /* ============================================================
+     SEÇÕES DE CATEGORIA
+     ============================================================ */
+  .section {
+    padding: var(--space-6) var(--space-4) var(--space-5);
+    scroll-margin-top: calc(var(--nav-h) + 12px);
+  }
+  .section + .section { border-top: 1px solid var(--cacau-08); }
+  .section-head { margin-bottom: var(--space-5); text-align: center; }
+  .section-title {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 30px;
+    color: var(--cacau-100);
+  }
+  .section-divider {
+    width: 36px; height: 1px;
+    background: var(--rose-profundo);
+    margin: var(--space-3) auto;
+  }
+  .section-note {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--cacau-70);
+    max-width: 320px;
+    margin: 0 auto;
+    line-height: 1.45;
+  }
+
+  /* ============================================================
+     CARDS DE PRODUTO — lista vertical 96×96
+     ============================================================ */
+  .products { display: flex; flex-direction: column; gap: var(--space-4); }
+  .card {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-3);
+    background: var(--creme);
+    border: 1px solid var(--cacau-08);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    position: relative;
+    transition: box-shadow var(--transition), transform var(--transition);
+  }
+  .card:hover { box-shadow: 0 4px 14px rgba(44,24,16,0.10); }
+  .product-image {
+    flex: 0 0 96px;
+    width: 96px;
+    height: 96px;
+    border-radius: var(--radius-md);
+    display: grid;
+    place-items: center;
+    color: var(--creme);
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 42px;
+    box-shadow: inset 0 0 0 1px var(--cacau-15);
+    overflow: hidden;
+    position: relative;
+  }
+  .product-image img { width: 100%; height: 100%; object-fit: cover; }
+  .product-image .initial { opacity: 0.85; line-height: 1; transform: translateY(-2px); }
+  .hue-cacau    { background: linear-gradient(135deg, var(--cacau-100), var(--cacau-70)); }
+  .hue-rose     { background: linear-gradient(135deg, var(--rose), var(--rose-profundo)); }
+  .hue-morango  { background: linear-gradient(135deg, var(--rose-profundo), #8B4A4A); }
+  .hue-limao    { background: linear-gradient(135deg, #E8D9A8, #C9B47A); }
+  .hue-maracuja { background: linear-gradient(135deg, #F0C66B, #C98E3E); }
+  .hue-ninho    { background: linear-gradient(135deg, #E8D5B0, #A8835A); }
+
+  .product-info { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
+  .product-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
+  .product-name {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--cacau-100);
+    line-height: 1.15;
+  }
+  .product-detail {
+    font-family: var(--ff-body);
+    font-size: 12px;
+    color: var(--cacau-70);
+    margin-top: 2px;
+  }
+  .product-desc {
+    font-family: var(--ff-body);
+    font-size: 13px;
+    color: var(--cacau-70);
+    margin-top: 4px;
+    line-height: 1.45;
+  }
+  .product-min {
+    font-family: var(--ff-body);
+    font-size: 11px;
+    color: var(--cacau-40);
+    letter-spacing: 0.3px;
+    margin-top: 4px;
+  }
+  .product-bottom {
+    margin-top: var(--space-2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+  .product-price {
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--cacau-100);
+    line-height: 1;
+  }
+  .product-price .unit {
+    font-family: var(--ff-body);
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--cacau-40);
+    margin-left: 4px;
+    letter-spacing: 0.4px;
+  }
+  .add-btn {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-full);
+    background: var(--cacau-100);
+    color: var(--creme);
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1;
+    transition: transform var(--transition), background var(--transition);
+  }
+  .add-btn:hover { background: #1c0f08; }
+  .add-btn:active { transform: scale(0.92); }
+
+  /* Badge */
+  .badge {
+    position: absolute;
+    top: -8px;
+    left: var(--space-3);
+    background: var(--rose);
+    color: var(--cacau-100);
+    font-family: var(--ff-body);
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 6px rgba(44,24,16,0.1);
+  }
+
+  /* ============================================================
+     BARRA "VER SACOLA"
+     ============================================================ */
+  .bag-bar {
+    position: fixed;
+    left: 0; right: 0;
+    bottom: 0;
+    z-index: 25;
+    padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+    background: var(--cacau-100);
+    box-shadow: 0 -4px 16px rgba(44,24,16,0.18);
+  }
+  .bag-bar-btn {
+    width: 100%;
+    background: transparent;
+    color: var(--creme);
+    font-family: var(--ff-body);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    transition: background var(--transition);
+  }
+  .bag-bar-btn:hover { background: rgba(250,246,241,0.06); }
+  .bag-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: var(--radius-full);
+    background: var(--rose);
+    color: var(--cacau-100);
+    font-family: var(--ff-body);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0;
+  }
+  .bag-count.is-pulse { animation: pulse 0.35s ease; }
+  @keyframes pulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  /* ============================================================
+     FAB WHATSAPP
+     ============================================================ */
+  .fab-whatsapp {
+    position: fixed;
+    right: var(--space-4);
+    bottom: calc(var(--bag-bar-h) + var(--space-4) + env(safe-area-inset-bottom, 0px));
+    z-index: 26;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-full);
+    background: var(--cacau-100);
+    color: var(--creme);
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-fab);
+    transition: transform var(--transition), background var(--transition);
+  }
+  .fab-whatsapp:hover { transform: translateY(-2px); background: #1c0f08; }
+  .fab-whatsapp svg { width: 28px; height: 28px; }
+
+  /* ============================================================
+     MODAL DA SACOLA
+     ============================================================ */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+  }
+  .modal.is-open { display: block; }
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(44,24,16,0.55);
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal-sheet {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    max-height: 90vh;
+    background: var(--creme);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: var(--shadow-modal);
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.25s ease;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-head {
+    padding: var(--space-4) var(--space-5) var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--cacau-08);
+  }
+  .modal-title {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 24px;
+  }
+  .modal-close {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+    color: var(--cacau-70);
+    font-size: 20px;
+    transition: background var(--transition);
+  }
+  .modal-close:hover { background: var(--cacau-08); }
+  .modal-body {
+    padding: var(--space-4) var(--space-5);
+    overflow-y: auto;
+    flex: 1 1 auto;
+  }
+  .modal-foot {
+    padding: var(--space-3) var(--space-5) var(--space-5);
+    border-top: 1px solid var(--cacau-08);
+    background: var(--creme);
+  }
+
+  /* Itens na sacola */
+  .bag-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--cacau-08);
+  }
+  .bag-item:last-child { border-bottom: 0; }
+  .bag-item-image {
+    flex: 0 0 48px;
+    width: 48px; height: 48px;
+    border-radius: var(--radius-sm);
+    display: grid;
+    place-items: center;
+    color: var(--creme);
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 22px;
+    box-shadow: inset 0 0 0 1px var(--cacau-15);
+    overflow: hidden;
+  }
+  .bag-item-info { flex: 1 1 auto; min-width: 0; }
+  .bag-item-name {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--cacau-100);
+    line-height: 1.2;
+  }
+  .bag-item-meta {
+    font-family: var(--ff-body);
+    font-size: 11px;
+    color: var(--cacau-40);
+    margin-top: 2px;
+  }
+  .qty-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--cacau-08);
+    border-radius: var(--radius-full);
+    padding: 2px;
+  }
+  .qty-btn {
+    width: 26px; height: 26px;
+    border-radius: var(--radius-full);
+    display: grid; place-items: center;
+    color: var(--cacau-100);
+    font-size: 16px;
+    transition: background var(--transition);
+  }
+  .qty-btn:hover { background: var(--cacau-08); }
+  .qty-num {
+    min-width: 28px;
+    text-align: center;
+    font-family: var(--ff-body);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--cacau-100);
+  }
+  .bag-item-remove {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-full);
+    display: grid; place-items: center;
+    color: var(--cacau-70);
+    transition: background var(--transition), color var(--transition);
+  }
+  .bag-item-remove:hover { background: var(--cacau-08); color: var(--cacau-100); }
+
+  /* Empty state */
+  .bag-empty {
+    text-align: center;
+    padding: var(--space-7) var(--space-4);
+  }
+  .bag-empty-icon {
+    margin: 0 auto var(--space-4);
+    width: 56px; height: 56px;
+    color: var(--cacau-40);
+  }
+  .bag-empty-title {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--cacau-100);
+  }
+  .bag-empty-sub {
+    font-family: var(--ff-body);
+    font-size: 13px;
+    color: var(--cacau-70);
+    margin-top: 6px;
+  }
+
+  /* Observações */
+  .obs-label {
+    display: block;
+    font-family: var(--ff-body);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--cacau-70);
+    margin: var(--space-4) 0 var(--space-2);
+  }
+  .obs-input {
+    width: 100%;
+    min-height: 72px;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--cacau-08);
+    background: var(--creme);
+    font-family: var(--ff-body);
+    font-size: 13px;
+    color: var(--cacau-100);
+    resize: vertical;
+    line-height: 1.5;
+  }
+  .obs-input::placeholder { color: var(--cacau-40); }
+  .obs-input:focus { border-color: var(--rose-profundo); outline: none; }
+
+  /* Botão de pedido (Cacau, ícone WhatsApp como referência) */
+  .wa-btn {
+    width: 100%;
+    background: var(--cacau-100);
+    color: var(--creme);
+    font-family: var(--ff-body);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    transition: background var(--transition), transform var(--transition);
+  }
+  .wa-btn:hover { background: #1c0f08; }
+  .wa-btn:active { transform: scale(0.98); }
+  .wa-btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+  /* Painel de confirmação */
+  .confirm-panel {
+    display: none;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-3) 0 0;
+  }
+  .confirm-panel.is-open { display: flex; }
+  .confirm-text {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--cacau-100);
+    text-align: center;
+    line-height: 1.4;
+  }
+  .confirm-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+  .btn-secondary {
+    background: var(--creme);
+    color: var(--cacau-100);
+    border: 1px solid var(--cacau-15);
+    font-family: var(--ff-body);
+    font-weight: 500;
+    font-size: 13px;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    transition: background var(--transition);
+  }
+  .btn-secondary:hover { background: var(--linho); }
+
+  /* ============================================================
+     DEV CREDIT (marca d'água do desenvolvedor)
+     ============================================================ */
+  .dev-credit {
+    padding: var(--space-5) var(--space-5);
+    text-align: center;
+    background: var(--creme);
+  }
+  .dev-credit-rule {
+    width: 28px; height: 1px;
+    background: var(--rose-profundo);
+    margin: 0 auto var(--space-3);
+    opacity: 0.6;
+  }
+  .dev-credit-text {
+    font-family: var(--ff-body);
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--cacau-40);
+    font-weight: 500;
+  }
+  .dev-credit-text a {
+    color: var(--cacau-70);
+    border-bottom: 1px solid var(--cacau-15);
+    padding-bottom: 1px;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .dev-credit-text a:hover {
+    color: var(--rose-profundo);
+    border-color: var(--rose-profundo);
+  }
+
+  /* ============================================================
+     BREAKPOINT — tablet/desktop centralizado (mantém formato celular)
+     ============================================================ */
+  @media (min-width: 640px) {
+    body { background: var(--linho); }
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--creme);
+      min-height: 100vh;
+      box-shadow: 0 0 60px rgba(44,24,16,0.08);
+      position: relative;
+    }
+    .top-filet,
+    .bag-bar,
+    .fab-whatsapp,
+    .modal { max-width: 480px; left: 50%; transform: translateX(-50%); }
+    .top-filet { right: auto; width: 480px; }
+    .bag-bar { right: auto; width: 480px; }
+    .modal { right: auto; width: 480px; height: 100%; }
+    .modal-sheet { left: 0; right: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-filet" aria-hidden="true"></div>
+
+<div class="app">
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo on-dark">
+        <span class="logo-name">Nathyele<sup class="logo-tm" aria-hidden="true">&trade;</sup></span>
+        <span class="logo-sub">Doces</span>
+      </div>
+      <p class="header-tagline">Perfeito do jeito que você merece</p>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       NAV STICKY
+       ============================================================ -->
+  <nav class="nav" aria-label="Categorias">
+    <div class="nav-track" id="nav-track"></div>
+  </nav>
+
+  <!-- ============================================================
+       SEÇÕES DE PRODUTO (geradas via JS)
+       ============================================================ -->
+  <main id="sections"></main>
+
+  <!-- ============================================================
+       DEV CREDIT
+       ============================================================ -->
+  <div class="dev-credit">
+    <div class="dev-credit-rule" aria-hidden="true"></div>
+    <p class="dev-credit-text">
+      Desenvolvido por
+      <a href="https://instagram.com/joaovitorbm_" target="_blank" rel="noopener" aria-label="Instagram do desenvolvedor João Vitor">@joaovitorbm_</a>
+    </p>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     BARRA "VER SACOLA"
+     ============================================================ -->
+<div class="bag-bar">
+  <button class="bag-bar-btn" data-action="open-bag" aria-label="Abrir sacola de pedidos">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </svg>
+    <span>Ver Sacola</span>
+    <span class="bag-count" id="bag-count">0</span>
+  </button>
+</div>
+
+<!-- ============================================================
+     FAB WHATSAPP
+     ============================================================ -->
+<a class="fab-whatsapp" href="https://wa.me/5562992936152" target="_blank" rel="noopener" aria-label="Falar direto no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.88 11.9L4 20l4.2-1.1a7.92 7.92 0 0 0 3.84 1h.01a7.94 7.94 0 0 0 7.95-7.92 7.88 7.88 0 0 0-2.4-5.66zm-5.55 12.21h-.01a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.66.67-2.44-.16-.25a6.59 6.59 0 1 1 12.23-3.5 6.6 6.6 0 0 1-6.63 6.59zm3.62-4.94c-.2-.1-1.18-.58-1.36-.65s-.32-.1-.45.1c-.13.2-.52.65-.63.78-.12.13-.23.15-.43.05a5.42 5.42 0 0 1-2.71-2.37c-.2-.35.2-.32.58-1.08a.37.37 0 0 0-.02-.35c-.05-.1-.45-1.08-.61-1.48-.16-.39-.33-.34-.45-.34l-.39-.01a.75.75 0 0 0-.54.25 2.27 2.27 0 0 0-.7 1.69 3.95 3.95 0 0 0 .82 2.08c.1.13 1.4 2.14 3.4 3 .47.21.85.33 1.14.42.48.15.92.13 1.26.08.39-.06 1.18-.48 1.35-.95.17-.46.17-.86.12-.95-.05-.08-.18-.13-.38-.23z"/>
+  </svg>
+</a>
+
+<!-- ============================================================
+     MODAL DA SACOLA
+     ============================================================ -->
+<div class="modal" id="bag-modal" role="dialog" aria-modal="true" aria-labelledby="bag-modal-title">
+  <div class="modal-backdrop" data-action="close-bag"></div>
+  <div class="modal-sheet">
+    <div class="modal-head">
+      <h2 class="modal-title" id="bag-modal-title">Sua Sacola</h2>
+      <button class="modal-close" data-action="close-bag" aria-label="Fechar sacola">×</button>
+    </div>
+    <div class="modal-body" id="bag-body"></div>
+    <div class="modal-foot" id="bag-foot"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     DADOS — edite produtos, preços e fotos aqui
+     ============================================================ */
+  const CONFIG = {
+    whatsappNumber: '5562992936152',
+    whatsappDisplay: '(62) 9 9293-6152',
+    instagram: '@nathyeledoce',
+    location: 'Aparecida de Goiânia · GO',
+    tagline: 'Perfeito do jeito que você merece'
+  };
+
+  const CATEGORIES = [
+    { id: 'brigadeiros', label: 'Brigadeiros', note: 'Pedido mínimo: 20 unidades por sabor' },
+    { id: 'pudins',      label: 'Pudins',      note: 'Formato família (serve 8 a 10 pessoas) disponível sob consulta' },
+    { id: 'bombons',     label: 'Bombons',     note: 'Mínimo 12 unidades · consumo recomendado em até 24h' },
+    { id: 'kits',        label: 'Kits & Caixas', note: 'Kits personalizados para eventos e empresas — consulte condições' }
+  ];
+
+  const PRODUCTS = [
+    // ---- BRIGADEIROS ----
+    {
+      id: 'brig-belga', categoryId: 'brigadeiros', name: 'Brigadeiro Belga',
+      description: 'Feito com chocolate belga puro, textura aveludada e sabor intenso que derrete na boca.',
+      price: 5.50, unit: 'un', minQty: 20,
+      badge: 'Mais pedido', badgeIcon: '★',
+      detail: null, image: null, placeholderHue: 'cacau'
+    },
+    {
+      id: 'brig-pistache', categoryId: 'brigadeiros', name: 'Pistache',
+      description: 'Pistache tostado artesanal com toque de flor de sal. Sofisticado e surpreendente.',
+      price: 6.00, unit: 'un', minQty: 20,
+      badge: null, badgeIcon: null,
+      detail: null, image: null, placeholderHue: 'limao'
+    },
+    {
+      id: 'brig-limao', categoryId: 'brigadeiros', name: 'Limão Siciliano',
+      description: 'Recheio cremoso e cítrico com raspas naturais de limão siciliano.',
+      price: 5.50, unit: 'un', minQty: 20,
+      badge: null, badgeIcon: null,
+      detail: null, image: null, placeholderHue: 'limao'
+    },
+    {
+      id: 'brig-maracuja', categoryId: 'brigadeiros', name: 'Maracujá',
+      description: 'Recheio tropical cítrico com borda crocante. Equilíbrio entre doce e azedo.',
+      price: 5.50, unit: 'un', minQty: 20,
+      badge: null, badgeIcon: null,
+      detail: null, image: null, placeholderHue: 'maracuja'
+    },
+    {
+      id: 'brig-morango', categoryId: 'brigadeiros', name: 'Morango',
+      description: 'Fruta fresca com chocolate ao leite. Clássico que encanta adultos e crianças.',
+      price: 5.50, unit: 'un', minQty: 20,
+      badge: null, badgeIcon: null,
+      detail: null, image: null, placeholderHue: 'morango'
+    },
+    {
+      id: 'brig-ninho', categoryId: 'brigadeiros', name: 'Ninho com Nutella',
+      description: 'O clássico com recheio duplo irresistível. Cremoso e favorito das crianças.',
+      price: 6.00, unit: 'un', minQty: 20,
+      badge: null, badgeIcon: null,
+      detail: null, image: null, placeholderHue: 'ninho'
+    },
+
+    // ---- PUDINS ----
+    {
+      id: 'pudim-classico', categoryId: 'pudins', name: 'Pudim Clássico',
+      description: 'Baunilha artesanal com calda de caramelo dourado. Textura perfeita, sabor de memória.',
+      price: 8.00, unit: 'un', minQty: null,
+      badge: null, badgeIcon: null,
+      detail: null, image: null, placeholderHue: 'limao'
+    },
+    {
+      id: 'pudim-chocolate', categoryId: 'pudins', name: 'Pudim de Chocolate',
+      description: 'Intenso, cremoso, com calda escura de chocolate amargo.',
+      price: 9.00, unit: 'un', minQty: null,
+      badge: null, badgeIcon: null,
+      detail: null, image: null, placeholderHue: 'cacau'
+    },
+
+    // ---- BOMBONS ----
+    {
+      id: 'bombom-morango', categoryId: 'bombons', name: 'Bombom de Morango',
+      description: 'Morango fresco selecionado coberto com chocolate belga temperado.',
+      price: 7.00, unit: 'un', minQty: 12,
+      badge: 'Carro-chefe', badgeIcon: '♥',
+      detail: null, image: null, placeholderHue: 'morango'
+    },
+
+    // ---- KITS & CAIXAS ----
+    {
+      id: 'kit-presente', categoryId: 'kits', name: 'Kit Presente',
+      description: 'Caixinha com 4 brigadeiros sortidos em acetato com laço. Ideal para presentes.',
+      price: 28.00, unit: 'kit', minQty: null,
+      badge: null, badgeIcon: null,
+      detail: '4 brigadeiros à escolha', image: null, placeholderHue: 'rose'
+    },
+    {
+      id: 'caixa-50', categoryId: 'kits', name: 'Caixa Centro 50un',
+      description: 'Caixa com 50 brigadeiros sortidos. Para mesas de festa e eventos.',
+      price: 220.00, unit: 'caixa', minQty: null,
+      badge: null, badgeIcon: null,
+      detail: '50 brigadeiros', image: null, placeholderHue: 'rose'
+    },
+    {
+      id: 'caixa-100', categoryId: 'kits', name: 'Caixa Grande 100un',
+      description: 'Caixa com 100 brigadeiros para grandes eventos e casamentos.',
+      price: 420.00, unit: 'caixa', minQty: null,
+      badge: null, badgeIcon: null,
+      detail: '100 brigadeiros', image: null, placeholderHue: 'cacau'
+    }
+  ];
+
+  /* ============================================================
+     ESTADO
+     ============================================================ */
+  const STORAGE_KEY = 'nathyele-bag-v1';
+  const bag = new Map(); // key: productId -> { product, qty }
+  const observations = { text: '' };
+  let confirmOpen = false;
+
+  /* ============================================================
+     UTILS
+     ============================================================ */
+  function formatBRL(value) {
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+  function unitSuffix(unit) {
+    if (unit === 'kit') return '/kit';
+    if (unit === 'caixa') return '/caixa';
+    return '/un';
+  }
+  function findProduct(id) { return PRODUCTS.find(p => p.id === id) || null; }
+
+  /* ============================================================
+     PERSISTÊNCIA
+     ============================================================ */
+  function loadBag() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data && Array.isArray(data.items)) {
+        data.items.forEach(it => {
+          const product = findProduct(it.id);
+          if (product && it.qty > 0) bag.set(product.id, { product, qty: it.qty });
+        });
+      }
+      if (data && typeof data.observations === 'string') {
+        observations.text = data.observations;
+      }
+    } catch (_) { /* corrupted storage — ignore */ }
+  }
+  function saveBag() {
+    try {
+      const data = {
+        items: Array.from(bag.values()).map(({ product, qty }) => ({ id: product.id, qty })),
+        observations: observations.text
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (_) { /* storage full or denied — silent */ }
+  }
+
+  /* ============================================================
+     RENDER
+     ============================================================ */
+  function renderCategoryNav() {
+    const track = document.getElementById('nav-track');
+    track.innerHTML = CATEGORIES.map((c, i) => `
+      <button type="button"
+              class="nav-tab${i === 0 ? ' is-active' : ''}"
+              data-action="scroll-to"
+              data-category-id="${c.id}"
+              aria-label="Ir para seção ${escapeHtml(c.label)}">
+        ${escapeHtml(c.label)}
+      </button>
+    `).join('');
+  }
+
+  function renderImage(product, size) {
+    if (product.image) {
+      return `<div class="product-image"><img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy" /></div>`;
+    }
+    const initial = product.name.charAt(0);
+    return `<div class="product-image hue-${escapeHtml(product.placeholderHue || 'cacau')}" aria-hidden="true"><span class="initial">${escapeHtml(initial)}</span></div>`;
+  }
+
+  function renderProductCard(product) {
+    const badgeHtml = product.badge
+      ? `<span class="badge">${product.badgeIcon ? escapeHtml(product.badgeIcon) + ' ' : ''}${escapeHtml(product.badge)}</span>`
+      : '';
+    const detailHtml = product.detail
+      ? `<div class="product-detail">${escapeHtml(product.detail)}</div>`
+      : '';
+    const minHtml = product.minQty
+      ? `<div class="product-min">Mín. ${product.minQty} un</div>`
+      : '';
+
+    return `
+      <article class="card" data-product-id="${escapeHtml(product.id)}">
+        ${badgeHtml}
+        ${renderImage(product)}
+        <div class="product-info">
+          <div class="product-top">
+            <div>
+              <h3 class="product-name">${escapeHtml(product.name)}</h3>
+              ${detailHtml}
+            </div>
+          </div>
+          <p class="product-desc">${escapeHtml(product.description)}</p>
+          ${minHtml}
+          <div class="product-bottom">
+            <span class="product-price">${formatBRL(product.price)}<span class="unit">${unitSuffix(product.unit)}</span></span>
+            <button type="button" class="add-btn" data-action="add" data-product-id="${escapeHtml(product.id)}" aria-label="Adicionar ${escapeHtml(product.name)} à sacola">+</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderSections() {
+    const root = document.getElementById('sections');
+    root.innerHTML = CATEGORIES.map(cat => {
+      const items = PRODUCTS.filter(p => p.categoryId === cat.id);
+      const cards = items.map(renderProductCard).join('');
+      const noteHtml = cat.note ? `<p class="section-note">${escapeHtml(cat.note)}</p>` : '';
+      return `
+        <section class="section" id="cat-${escapeHtml(cat.id)}" data-category-id="${escapeHtml(cat.id)}">
+          <div class="section-head">
+            <h2 class="section-title">${escapeHtml(cat.label)}</h2>
+            <div class="section-divider" aria-hidden="true"></div>
+            ${noteHtml}
+          </div>
+          <div class="products">${cards}</div>
+        </section>
+      `;
+    }).join('');
+  }
+
+  function updateBagButton(pulse) {
+    const el = document.getElementById('bag-count');
+    let total = 0;
+    bag.forEach(it => { total += it.qty; });
+    el.textContent = String(total);
+    if (pulse) {
+      el.classList.remove('is-pulse');
+      // force reflow to restart animation
+      void el.offsetWidth;
+      el.classList.add('is-pulse');
+    }
+  }
+
+  function renderBagItem({ product, qty }) {
+    const initial = product.name.charAt(0);
+    const imageHtml = product.image
+      ? `<div class="bag-item-image"><img src="${escapeHtml(product.image)}" alt="" /></div>`
+      : `<div class="bag-item-image hue-${escapeHtml(product.placeholderHue || 'cacau')}" aria-hidden="true">${escapeHtml(initial)}</div>`;
+    const metaParts = [];
+    if (product.detail) metaParts.push(product.detail);
+    metaParts.push(formatBRL(product.price) + unitSuffix(product.unit));
+    return `
+      <div class="bag-item" data-product-id="${escapeHtml(product.id)}">
+        ${imageHtml}
+        <div class="bag-item-info">
+          <div class="bag-item-name">${escapeHtml(product.name)}</div>
+          <div class="bag-item-meta">${escapeHtml(metaParts.join(' · '))}</div>
+        </div>
+        <div class="qty-controls">
+          <button type="button" class="qty-btn" data-action="dec" data-product-id="${escapeHtml(product.id)}" aria-label="Diminuir quantidade de ${escapeHtml(product.name)}">−</button>
+          <span class="qty-num">${qty}</span>
+          <button type="button" class="qty-btn" data-action="inc" data-product-id="${escapeHtml(product.id)}" aria-label="Aumentar quantidade de ${escapeHtml(product.name)}">+</button>
+        </div>
+        <button type="button" class="bag-item-remove" data-action="remove" data-product-id="${escapeHtml(product.id)}" aria-label="Remover ${escapeHtml(product.name)} da sacola">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </button>
+      </div>
+    `;
+  }
+
+  function renderBag() {
+    const body = document.getElementById('bag-body');
+    const foot = document.getElementById('bag-foot');
+    const empty = bag.size === 0;
+
+    if (empty) {
+      body.innerHTML = `
+        <div class="bag-empty">
+          <svg class="bag-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <div class="bag-empty-title">Sua sacola está vazia</div>
+          <p class="bag-empty-sub">Adicione doces ao seu pedido para continuar.</p>
+        </div>
+      `;
+      foot.innerHTML = '';
+      return;
+    }
+
+    const items = Array.from(bag.values()).map(renderBagItem).join('');
+    body.innerHTML = `
+      ${items}
+      <label class="obs-label" for="obs-input">Observações</label>
+      <textarea class="obs-input" id="obs-input"
+                placeholder="Data de entrega, sabores específicos, recheios especiais..."
+                aria-label="Observações sobre o pedido">${escapeHtml(observations.text)}</textarea>
+    `;
+
+    foot.innerHTML = `
+      <button type="button" class="wa-btn" data-action="whatsapp-confirm" aria-label="Fazer pedido pelo WhatsApp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.88 11.9L4 20l4.2-1.1a7.92 7.92 0 0 0 3.84 1h.01a7.94 7.94 0 0 0 7.95-7.92 7.88 7.88 0 0 0-2.4-5.66zm-5.55 12.21h-.01a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.66.67-2.44-.16-.25a6.59 6.59 0 1 1 12.23-3.5 6.6 6.6 0 0 1-6.63 6.59zm3.62-4.94c-.2-.1-1.18-.58-1.36-.65s-.32-.1-.45.1c-.13.2-.52.65-.63.78-.12.13-.23.15-.43.05a5.42 5.42 0 0 1-2.71-2.37c-.2-.35.2-.32.58-1.08a.37.37 0 0 0-.02-.35c-.05-.1-.45-1.08-.61-1.48-.16-.39-.33-.34-.45-.34l-.39-.01a.75.75 0 0 0-.54.25 2.27 2.27 0 0 0-.7 1.69 3.95 3.95 0 0 0 .82 2.08c.1.13 1.4 2.14 3.4 3 .47.21.85.33 1.14.42.48.15.92.13 1.26.08.39-.06 1.18-.48 1.35-.95.17-.46.17-.86.12-.95-.05-.08-.18-.13-.38-.23z"/>
+        </svg>
+        Fazer Pedido pelo WhatsApp
+      </button>
+      <div class="confirm-panel${confirmOpen ? ' is-open' : ''}" id="confirm-panel">
+        <p class="confirm-text">Confirmar pedido e abrir o WhatsApp?</p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-secondary" data-action="whatsapp-cancel">Cancelar</button>
+          <button type="button" class="wa-btn" data-action="whatsapp-go" style="padding:14px;">Sim, abrir</button>
+        </div>
+      </div>
+    `;
+
+    // Rebind textarea
+    const ta = document.getElementById('obs-input');
+    if (ta) {
+      ta.addEventListener('input', e => {
+        observations.text = e.target.value;
+        saveBag();
+      });
+    }
+  }
+
+  /* ============================================================
+     OPERAÇÕES DA SACOLA
+     ============================================================ */
+  function addToBag(id) {
+    const product = findProduct(id);
+    if (!product) return;
+    const existing = bag.get(id);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      const qty = product.minQty || 1;
+      bag.set(id, { product, qty });
+    }
+    saveBag();
+    updateBagButton(true);
+    renderBag();
+  }
+  function incrementQty(id) {
+    const it = bag.get(id);
+    if (!it) return;
+    it.qty += 1;
+    saveBag();
+    updateBagButton();
+    renderBag();
+  }
+  function decrementQty(id) {
+    const it = bag.get(id);
+    if (!it) return;
+    const floor = it.product.minQty || 1;
+    if (it.qty <= floor) {
+      bag.delete(id);
+    } else {
+      it.qty -= 1;
+    }
+    saveBag();
+    updateBagButton();
+    renderBag();
+  }
+  function removeFromBag(id) {
+    bag.delete(id);
+    saveBag();
+    updateBagButton();
+    renderBag();
+  }
+
+  /* ============================================================
+     MODAL
+     ============================================================ */
+  function openBagModal() {
+    confirmOpen = false;
+    renderBag();
+    document.getElementById('bag-modal').classList.add('is-open');
+    document.body.classList.add('is-modal-open');
+  }
+  function closeBagModal() {
+    document.getElementById('bag-modal').classList.remove('is-open');
+    document.body.classList.remove('is-modal-open');
+    confirmOpen = false;
+  }
+
+  /* ============================================================
+     WHATSAPP
+     ============================================================ */
+  function buildWhatsAppMessage() {
+    const lines = ['Olá Nathyele! Tenho interesse em fazer um pedido:', ''];
+    bag.forEach(({ product, qty }) => {
+      lines.push(`• ${qty}x ${product.name}`);
+    });
+    if (observations.text.trim()) {
+      lines.push('');
+      lines.push('Observações: ' + observations.text.trim());
+    }
+    lines.push('');
+    lines.push('Pode me passar mais informações e valores?');
+    return lines.join('\n');
+  }
+  function openWhatsAppConfirm() {
+    confirmOpen = true;
+    renderBag();
+    const panel = document.getElementById('confirm-panel');
+    if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function cancelWhatsApp() {
+    confirmOpen = false;
+    renderBag();
+  }
+  function goWhatsApp() {
+    if (bag.size === 0) return;
+    const msg = buildWhatsAppMessage();
+    const url = 'https://wa.me/' + CONFIG.whatsappNumber + '?text=' + encodeURIComponent(msg);
+    window.open(url, '_blank', 'noopener');
+    confirmOpen = false;
+  }
+
+  /* ============================================================
+     SCROLL / SCROLLSPY
+     ============================================================ */
+  function scrollToCategory(id) {
+    const el = document.getElementById('cat-' + id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function setActiveTab(id) {
+    document.querySelectorAll('.nav-tab').forEach(t => {
+      t.classList.toggle('is-active', t.getAttribute('data-category-id') === id);
+    });
+  }
+  function setupScrollSpy() {
+    const sections = document.querySelectorAll('.section');
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('data-category-id');
+          if (id) setActiveTab(id);
+        }
+      });
+    }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+    sections.forEach(s => io.observe(s));
+  }
+
+  /* ============================================================
+     EVENT DELEGATION
+     ============================================================ */
+  function handleClick(e) {
+    const target = e.target.closest('[data-action]');
+    if (!target) return;
+    const action = target.getAttribute('data-action');
+    const id = target.getAttribute('data-product-id');
+    const catId = target.getAttribute('data-category-id');
+
+    switch (action) {
+      case 'add':              addToBag(id); break;
+      case 'inc':              incrementQty(id); break;
+      case 'dec':              decrementQty(id); break;
+      case 'remove':           removeFromBag(id); break;
+      case 'open-bag':         openBagModal(); break;
+      case 'close-bag':        closeBagModal(); break;
+      case 'scroll-to':        if (catId) { setActiveTab(catId); scrollToCategory(catId); } break;
+      case 'whatsapp-confirm': openWhatsAppConfirm(); break;
+      case 'whatsapp-cancel':  cancelWhatsApp(); break;
+      case 'whatsapp-go':      goWhatsApp(); break;
+    }
+  }
+  function handleKey(e) {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('bag-modal');
+      if (modal && modal.classList.contains('is-open')) closeBagModal();
+    }
+  }
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  function init() {
+    loadBag();
+    renderCategoryNav();
+    renderSections();
+    updateBagButton();
+    setupScrollSpy();
+    document.addEventListener('click', handleClick);
+    document.addEventListener('keydown', handleKey);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>
