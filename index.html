@@ -1263,8 +1263,7 @@
     if (existing) {
       existing.qty += 1;
     } else {
-      const qty = product.minQty || 1;
-      bag.set(id, { product, qty });
+      bag.set(id, { product, qty: 1 });
     }
     saveBag();
     updateBagButton(true);
