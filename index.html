@@ -368,6 +368,64 @@
   .add-btn:hover { background: #1c0f08; }
   .add-btn:active { transform: scale(0.92); }
 
+  /* Grupo de formatos (unidade / meio cento / cento) — botões clicáveis */
+  .fmt-options {
+    margin-top: var(--space-2);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .fmt-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 6px;
+    border: 1.5px solid rgba(44, 24, 16, 0.2);
+    border-radius: 12px;
+    background: rgba(44, 24, 16, 0.045);
+    box-shadow: 0 1px 2px rgba(44, 24, 16, 0.06);
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  }
+  .fmt-btn:hover { background: var(--cacau-100); border-color: var(--cacau-100); }
+  .fmt-btn:hover .fmt-btn-label,
+  .fmt-btn:hover .fmt-btn-price,
+  .fmt-btn:hover .fmt-btn-add { color: var(--creme); }
+  .fmt-btn:active { transform: scale(0.96); }
+  .fmt-btn-label {
+    font-family: var(--ff-body);
+    font-size: 10px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--cacau-40);
+  }
+  .fmt-btn-price {
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--cacau-100);
+  }
+  .fmt-btn-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    margin-top: 2px;
+    font-family: var(--ff-body);
+    font-size: 9.5px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: var(--cacau-40);
+  }
+  .fmt-btn-plus {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+  }
+
   /* ============================================================
      BARRA "VER SACOLA"
      ============================================================ */
@@ -837,8 +895,10 @@
   };
 
   const CATEGORIES = [
-    { id: 'brig-tradicionais', label: 'Brigadeiros Tradicionais', note: 'Meio cento R$ 85 · Cento R$ 150 · Unidade R$ 2,50' },
-    { id: 'brig-premium',      label: 'Brigadeiros Premium',      note: 'Meio cento R$ 95 · Cento R$ 180 · Unidade R$ 2,50' },
+    { id: 'brig-tradicionais', label: 'Brigadeiros Tradicionais', note: 'Escolha o formato em cada sabor — unidade, meio cento ou cento',
+      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 85 }, { id: 'cento', label: 'Cento', units: 100, price: 150 } ] },
+    { id: 'brig-premium',      label: 'Brigadeiros Premium',      note: 'Escolha o formato em cada sabor — unidade, meio cento ou cento',
+      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 95 }, { id: 'cento', label: 'Cento', units: 100, price: 180 } ] },
     { id: 'caixas',            label: 'Caixa Presente',           note: 'Caixa montada para presentear' },
     { id: 'bombons',           label: 'Bombons',                  note: 'Morango fresco e selecionado coberto com chocolate, feitos no capricho' },
     { id: 'pudins',            label: 'Pudins',                   note: 'Formato família (serve 8 a 10 pessoas) disponível sob consulta' },
@@ -1033,7 +1093,7 @@
   /* ============================================================
      ESTADO
      ============================================================ */
-  const STORAGE_KEY = 'nathyele-bag-v1';
+  const STORAGE_KEY = 'nathyele-bag-v2';
   const bag = new Map(); // key: productId -> { product, qty }
   const observations = { text: '' };
   let confirmOpen = false;
@@ -1055,6 +1115,22 @@
     return '/un';
   }
   function findProduct(id) { return PRODUCTS.find(p => p.id === id) || null; }
+  function findCategory(id) { return CATEGORIES.find(c => c.id === id) || null; }
+  function productPackages(product) {
+    const cat = findCategory(product.categoryId);
+    return (cat && cat.packages && cat.packages.length) ? cat.packages : null;
+  }
+  // Resolve a chosen format ('un' or a package id) into a uniform descriptor.
+  function resolveFormat(product, formatId) {
+    if (!formatId || formatId === 'un') {
+      return { id: 'un', label: 'Unidade', price: product.price, units: 1 };
+    }
+    const pkgs = productPackages(product);
+    const pkg = pkgs && pkgs.find(p => p.id === formatId);
+    if (!pkg) return null;
+    return { id: pkg.id, label: pkg.label, price: pkg.price, units: pkg.units };
+  }
+  function bagKey(productId, formatId) { return productId + '::' + formatId; }
 
   /* ============================================================
      PERSISTÊNCIA
@@ -1067,7 +1143,10 @@
       if (data && Array.isArray(data.items)) {
         data.items.forEach(it => {
           const product = findProduct(it.id);
-          if (product && it.qty > 0) bag.set(product.id, { product, qty: it.qty });
+          if (!product || !(it.qty > 0)) return;
+          const format = resolveFormat(product, it.format);
+          if (!format) return;
+          bag.set(bagKey(product.id, format.id), { product, format, qty: it.qty });
         });
       }
       if (data && typeof data.observations === 'string') {
@@ -1078,7 +1157,7 @@
   function saveBag() {
     try {
       const data = {
-        items: Array.from(bag.values()).map(({ product, qty }) => ({ id: product.id, qty })),
+        items: Array.from(bag.values()).map(({ product, format, qty }) => ({ id: product.id, format: format.id, qty })),
         observations: observations.text
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -1117,6 +1196,28 @@
       ? `<div class="product-min">Mín. ${product.minQty} un</div>`
       : '';
 
+    const pkgs = productPackages(product);
+    let actionHtml;
+    if (pkgs) {
+      const formats = [{ id: 'un', label: 'Unidade', price: product.price }]
+        .concat(pkgs.map(p => ({ id: p.id, label: p.label, price: p.price })));
+      actionHtml = `
+          <div class="fmt-options" role="group" aria-label="Escolha o formato">
+            ${formats.map(f => `
+            <button type="button" class="fmt-btn" data-action="add" data-product-id="${escapeHtml(product.id)}" data-format="${escapeHtml(f.id)}" aria-label="Adicionar ${escapeHtml(f.label)} de ${escapeHtml(product.name)} à sacola">
+              <span class="fmt-btn-label">${escapeHtml(f.label)}</span>
+              <span class="fmt-btn-price">${formatBRL(f.price)}</span>
+              <span class="fmt-btn-add"><span class="fmt-btn-plus" aria-hidden="true">+</span> Adicionar</span>
+            </button>`).join('')}
+          </div>`;
+    } else {
+      actionHtml = `
+          <div class="product-bottom">
+            <span class="product-price">${formatBRL(product.price)}<span class="unit">${unitSuffix(product.unit)}</span></span>
+            <button type="button" class="add-btn" data-action="add" data-product-id="${escapeHtml(product.id)}" data-format="un" aria-label="Adicionar ${escapeHtml(product.name)} à sacola">+</button>
+          </div>`;
+    }
+
     return `
       <article class="card" data-product-id="${escapeHtml(product.id)}">
         ${renderImage(product)}
@@ -1129,10 +1230,7 @@
           </div>
           <p class="product-desc">${escapeHtml(product.description)}</p>
           ${minHtml}
-          <div class="product-bottom">
-            <span class="product-price">${formatBRL(product.price)}<span class="unit">${unitSuffix(product.unit)}</span></span>
-            <button type="button" class="add-btn" data-action="add" data-product-id="${escapeHtml(product.id)}" aria-label="Adicionar ${escapeHtml(product.name)} à sacola">+</button>
-          </div>
+          ${actionHtml}
         </div>
       </article>
     `;
@@ -1170,27 +1268,35 @@
     }
   }
 
-  function renderBagItem({ product, qty }) {
+  function renderBagItem(item, key) {
+    const { product, format, qty } = item;
+    const isUnit = format.id === 'un';
     const initial = product.name.charAt(0);
     const imageHtml = product.image
       ? `<div class="bag-item-image"><img src="${escapeHtml(product.image)}" alt="" /></div>`
       : `<div class="bag-item-image hue-${escapeHtml(product.placeholderHue || 'cacau')}" aria-hidden="true">${escapeHtml(initial)}</div>`;
+    const name = isUnit ? product.name : `${format.label} — ${product.name}`;
     const metaParts = [];
-    if (product.detail) metaParts.push(product.detail);
-    metaParts.push(formatBRL(product.price) + unitSuffix(product.unit));
+    if (isUnit) {
+      if (product.detail) metaParts.push(product.detail);
+      metaParts.push(formatBRL(format.price) + unitSuffix(product.unit));
+    } else {
+      metaParts.push(`${format.units} un`);
+      metaParts.push(formatBRL(format.price));
+    }
     return `
-      <div class="bag-item" data-product-id="${escapeHtml(product.id)}">
+      <div class="bag-item" data-key="${escapeHtml(key)}">
         ${imageHtml}
         <div class="bag-item-info">
-          <div class="bag-item-name">${escapeHtml(product.name)}</div>
+          <div class="bag-item-name">${escapeHtml(name)}</div>
           <div class="bag-item-meta">${escapeHtml(metaParts.join(' · '))}</div>
         </div>
         <div class="qty-controls">
-          <button type="button" class="qty-btn" data-action="dec" data-product-id="${escapeHtml(product.id)}" aria-label="Diminuir quantidade de ${escapeHtml(product.name)}">−</button>
+          <button type="button" class="qty-btn" data-action="dec" data-key="${escapeHtml(key)}" aria-label="Diminuir quantidade de ${escapeHtml(name)}">−</button>
           <span class="qty-num">${qty}</span>
-          <button type="button" class="qty-btn" data-action="inc" data-product-id="${escapeHtml(product.id)}" aria-label="Aumentar quantidade de ${escapeHtml(product.name)}">+</button>
+          <button type="button" class="qty-btn" data-action="inc" data-key="${escapeHtml(key)}" aria-label="Aumentar quantidade de ${escapeHtml(name)}">+</button>
         </div>
-        <button type="button" class="bag-item-remove" data-action="remove" data-product-id="${escapeHtml(product.id)}" aria-label="Remover ${escapeHtml(product.name)} da sacola">
+        <button type="button" class="bag-item-remove" data-action="remove" data-key="${escapeHtml(key)}" aria-label="Remover ${escapeHtml(name)} da sacola">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         </button>
       </div>
@@ -1218,7 +1324,7 @@
       return;
     }
 
-    const items = Array.from(bag.values()).map(renderBagItem).join('');
+    const items = Array.from(bag.entries()).map(([key, item]) => renderBagItem(item, key)).join('');
     body.innerHTML = `
       ${items}
       <label class="obs-label" for="obs-input">Observações</label>
@@ -1256,33 +1362,35 @@
   /* ============================================================
      OPERAÇÕES DA SACOLA
      ============================================================ */
-  function addToBag(id) {
+  function addToBag(id, formatId) {
     const product = findProduct(id);
     if (!product) return;
-    const existing = bag.get(id);
+    const format = resolveFormat(product, formatId);
+    if (!format) return;
+    const key = bagKey(product.id, format.id);
+    const existing = bag.get(key);
     if (existing) {
       existing.qty += 1;
     } else {
-      bag.set(id, { product, qty: 1 });
+      bag.set(key, { product, format, qty: 1 });
     }
     saveBag();
     updateBagButton(true);
     renderBag();
   }
-  function incrementQty(id) {
-    const it = bag.get(id);
+  function incrementQty(key) {
+    const it = bag.get(key);
     if (!it) return;
     it.qty += 1;
     saveBag();
     updateBagButton();
     renderBag();
   }
-  function decrementQty(id) {
-    const it = bag.get(id);
+  function decrementQty(key) {
+    const it = bag.get(key);
     if (!it) return;
-    const floor = it.product.minQty || 1;
-    if (it.qty <= floor) {
-      bag.delete(id);
+    if (it.qty <= 1) {
+      bag.delete(key);
     } else {
       it.qty -= 1;
     }
@@ -1290,8 +1398,8 @@
     updateBagButton();
     renderBag();
   }
-  function removeFromBag(id) {
-    bag.delete(id);
+  function removeFromBag(key) {
+    bag.delete(key);
     saveBag();
     updateBagButton();
     renderBag();
@@ -1317,8 +1425,12 @@
      ============================================================ */
   function buildWhatsAppMessage() {
     const lines = ['Olá Nathyele! Tenho interesse em fazer um pedido:', ''];
-    bag.forEach(({ product, qty }) => {
-      lines.push(`• ${qty}x ${product.name}`);
+    bag.forEach(({ product, format, qty }) => {
+      if (format.id === 'un') {
+        lines.push(`• ${qty}x ${product.name}`);
+      } else {
+        lines.push(`• ${qty}x ${format.label} de ${product.name} (${format.units} un) — ${formatBRL(format.price)}`);
+      }
     });
     if (observations.text.trim()) {
       lines.push('');
@@ -1387,12 +1499,14 @@
     const action = target.getAttribute('data-action');
     const id = target.getAttribute('data-product-id');
     const catId = target.getAttribute('data-category-id');
+    const key = target.getAttribute('data-key');
+    const format = target.getAttribute('data-format');
 
     switch (action) {
-      case 'add':              addToBag(id); break;
-      case 'inc':              incrementQty(id); break;
-      case 'dec':              decrementQty(id); break;
-      case 'remove':           removeFromBag(id); break;
+      case 'add':              addToBag(id, format); break;
+      case 'inc':              incrementQty(key); break;
+      case 'dec':              decrementQty(key); break;
+      case 'remove':           removeFromBag(key); break;
       case 'open-bag':         openBagModal(); break;
       case 'close-bag':        closeBagModal(); break;
       case 'scroll-to':        if (catId) { setActiveTab(catId); scrollToCategory(catId); } break;
