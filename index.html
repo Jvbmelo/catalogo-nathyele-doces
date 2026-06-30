@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#2C1810" />
 <title>Nathyele Doces — Cardápio</title>
+<link rel="icon" type="image/png" href="images/favicon.png" />
+<link rel="apple-touch-icon" href="images/favicon.png" />
 <meta name="description" content="Doceria artesanal de alto padrão em Aparecida de Goiânia. Brigadeiros, pudins, bombons e kits para presentear." />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -835,75 +837,154 @@
   };
 
   const CATEGORIES = [
-    { id: 'brigadeiros', label: 'Brigadeiros', note: 'Pedido mínimo: 20 unidades por sabor' },
-    { id: 'bombons',     label: 'Bombons',     note: 'Mínimo 12 unidades · consumo recomendado em até 24h' },
-    { id: 'pudins',      label: 'Pudins',      note: 'Formato família (serve 8 a 10 pessoas) disponível sob consulta' },
-    { id: 'sobremesas',  label: 'Sobremesas & Taças', note: 'Sobremesas individuais feitas sob encomenda' }
+    { id: 'brig-tradicionais', label: 'Brigadeiros Tradicionais', note: 'Meio cento R$ 85 · Cento R$ 150 · Unidade R$ 2,50' },
+    { id: 'brig-premium',      label: 'Brigadeiros Premium',      note: 'Meio cento R$ 95 · Cento R$ 180 · Unidade R$ 2,50' },
+    { id: 'caixas',            label: 'Caixa Presente',           note: 'Caixa montada para presentear' },
+    { id: 'bombons',           label: 'Bombons',                  note: 'Mínimo 12 unidades · consumo recomendado em até 24h' },
+    { id: 'pudins',            label: 'Pudins',                   note: 'Formato família (serve 8 a 10 pessoas) disponível sob consulta' },
+    { id: 'doces-finos',       label: 'Doces Finos',              note: 'Doces finos artesanais feitos sob encomenda' },
+    { id: 'sobremesas',        label: 'Sobremesas & Taças',       note: 'Sobremesas individuais feitas sob encomenda' }
   ];
 
   const PRODUCTS = [
-    // ---- BRIGADEIROS ---- (cada card usa a foto real correspondente em /images)
+    // ---- BRIGADEIROS TRADICIONAIS ---- (R$ 2,50/un · meio cento R$ 85 · cento R$ 150)
     {
-      id: 'brig-ninho', categoryId: 'brigadeiros', name: 'Ninho com Nutella',
+      id: 'brig-ninho', categoryId: 'brig-tradicionais', name: 'Ninho',
+      description: 'Brigadeiro cremoso de leite ninho. Delicado, marcante e irresistível.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: null, placeholderHue: 'ninho'
+    },
+    {
+      id: 'brig-ninho-nutella', categoryId: 'brig-tradicionais', name: 'Ninho com Nutella',
       description: 'O clássico com recheio duplo irresistível. Cremoso e favorito das crianças.',
-      price: 6.00, unit: 'un', minQty: 20,
+      price: 2.50, unit: 'un', minQty: null,
       detail: null, image: 'images/Ninho com Nutella.jpeg', placeholderHue: 'ninho'
     },
     {
-      id: 'brig-morango', categoryId: 'brigadeiros', name: 'Morango',
-      description: 'Fruta fresca com chocolate ao leite. Clássico que encanta adultos e crianças.',
-      price: 6.00, unit: 'un', minQty: 20,
-      detail: null, image: 'images/Morango.jpeg', placeholderHue: 'morango'
-    },
-    {
-      id: 'brig-ao-leite', categoryId: 'brigadeiros', name: 'Ao Leite',
+      id: 'brig-ao-leite', categoryId: 'brig-tradicionais', name: 'Ao Leite',
       description: 'Brigadeiro tradicional de chocolate ao leite, cremoso e na medida certa do doce.',
-      price: 6.00, unit: 'un', minQty: 20,
+      price: 2.50, unit: 'un', minQty: null,
       detail: null, image: 'images/Ao leite.jpeg', placeholderHue: 'cacau'
     },
     {
-      id: 'brig-prestigio', categoryId: 'brigadeiros', name: 'Prestígio',
-      description: 'Coco fresco envolto em chocolate. O equilíbrio perfeito entre cremoso e marcante.',
-      price: 6.00, unit: 'un', minQty: 20,
-      detail: null, image: 'images/Prestígio.jpeg', placeholderHue: 'cacau'
-    },
-    {
-      id: 'brig-ferreiro', categoryId: 'brigadeiros', name: 'Ferreiro',
+      id: 'brig-ferreiro', categoryId: 'brig-tradicionais', name: 'Ferreiro',
       description: 'Inspirado no clássico bombom: chocolate, avelã e crocante de wafer.',
-      price: 6.00, unit: 'un', minQty: 20,
+      price: 2.50, unit: 'un', minQty: null,
       detail: null, image: 'images/Ferreiro.jpeg', placeholderHue: 'ninho'
     },
     {
-      id: 'brig-dois-amores', categoryId: 'brigadeiros', name: 'Dois Amores',
+      id: 'brig-pacoca', categoryId: 'brig-tradicionais', name: 'Paçoca',
+      description: 'Paçoca cremosa de amendoim. O sabor da roça em forma de brigadeiro.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: null, placeholderHue: 'ninho'
+    },
+    {
+      id: 'brig-dois-amores', categoryId: 'brig-tradicionais', name: 'Dois Amores',
       description: 'A união perfeita do chocolate ao leite com o branco. Dois sabores em cada mordida.',
-      price: 6.00, unit: 'un', minQty: 20,
+      price: 2.50, unit: 'un', minQty: null,
       detail: null, image: 'images/Dois amores.jpeg', placeholderHue: 'rose'
     },
     {
-      id: 'brig-romeu-julieta', categoryId: 'brigadeiros', name: 'Romeu e Julieta',
+      id: 'brig-morango', categoryId: 'brig-tradicionais', name: 'Morango',
+      description: 'Fruta fresca com chocolate ao leite. Clássico que encanta adultos e crianças.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: 'images/Morango.jpeg', placeholderHue: 'morango'
+    },
+    {
+      id: 'brig-prestigio', categoryId: 'brig-tradicionais', name: 'Prestígio',
+      description: 'Coco fresco envolto em chocolate. O equilíbrio perfeito entre cremoso e marcante.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: 'images/Prestígio.jpeg', placeholderHue: 'cacau'
+    },
+    {
+      id: 'brig-coco', categoryId: 'brig-tradicionais', name: 'Coco',
+      description: 'Brigadeiro de coco fresco, cremoso e na medida certa do doce.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: null, placeholderHue: 'ninho'
+    },
+
+    // ---- BRIGADEIROS PREMIUM ---- (R$ 2,50/un · meio cento R$ 95 · cento R$ 180)
+    {
+      id: 'brig-maracuja', categoryId: 'brig-premium', name: 'Maracujá',
+      description: 'Brigadeiro cremoso de maracujá, tropical e marcante. Intenso na medida certa.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: 'images/Maracujá.jpeg', placeholderHue: 'maracuja'
+    },
+    {
+      id: 'brig-limao', categoryId: 'brig-premium', name: 'Limão',
+      description: 'Brigadeiro cítrico e refrescante de limão. O equilíbrio perfeito entre o doce e o azedinho.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: 'images/Limão.jpeg', placeholderHue: 'limao'
+    },
+    {
+      id: 'brig-oreo', categoryId: 'brig-premium', name: 'Oreo',
+      description: 'Brigadeiro branco com pedaços crocantes de biscoito Oreo. Cremoso por dentro, crocante a cada mordida.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: 'images/Oreo.jpeg', placeholderHue: 'cacau'
+    },
+    {
+      id: 'brig-romeu-julieta', categoryId: 'brig-premium', name: 'Romeu e Julieta',
       description: 'Goiabada cremosa com toque de queijo. O encontro mais brasileiro dos sabores.',
-      price: 6.00, unit: 'un', minQty: 20,
+      price: 2.50, unit: 'un', minQty: null,
       detail: null, image: 'images/romeu e julieta.jpeg', placeholderHue: 'morango'
     },
     {
-      id: 'brig-camafeu', categoryId: 'brigadeiros', name: 'Camafeu',
-      description: 'Brigadeiro de nozes com noz inteira, delicado e sofisticado.',
-      price: 6.00, unit: 'un', minQty: 20,
-      detail: null, image: 'images/Camafeu.jpeg', placeholderHue: 'ninho'
+      id: 'brig-churros', categoryId: 'brig-premium', name: 'Churros',
+      description: 'Doce de leite cremoso com um toque marcante de canela. O sabor da feira em forma de brigadeiro.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: 'images/Churros.jpeg', placeholderHue: 'ninho'
     },
     {
-      id: 'brig-maracuja', categoryId: 'brigadeiros', name: 'Gota de Maracujá',
-      description: 'Recheio tropical cítrico com borda crocante. Equilíbrio entre doce e azedo.',
-      price: 6.00, unit: 'un', minQty: 20,
-      detail: null, image: 'images/Gota de maracujá.jpeg', placeholderHue: 'maracuja'
+      id: 'brig-dl-crocante', categoryId: 'brig-premium', name: 'Doce de Leite com Crocante e Flor de Sal',
+      description: 'Doce de leite com crocante e um toque de flor de sal. Doce e salgado em equilíbrio perfeito.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: null, placeholderHue: 'ninho'
+    },
+    {
+      id: 'brig-palha-italiana', categoryId: 'brig-premium', name: 'Palha Italiana',
+      description: 'Brigadeiro com pedaços de biscoito. A clássica palha italiana em formato de brigadeiro.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: null, placeholderHue: 'cacau'
+    },
+    {
+      id: 'brig-ninho-uva', categoryId: 'brig-premium', name: 'Ninho com Uva',
+      description: 'Creme de leite ninho com uva fresca. Cremoso com um toque de frescor.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: null, placeholderHue: 'rose'
+    },
+    {
+      id: 'brig-dl-coco-queimado', categoryId: 'brig-premium', name: 'Doce de Leite com Coco Queimado',
+      description: 'Doce de leite com coco queimado. Caramelizado, marcante e sofisticado.',
+      price: 2.50, unit: 'un', minQty: null,
+      detail: null, image: null, placeholderHue: 'ninho'
     },
 
-    // ---- BOMBONS ----
+    // ---- CAIXA PRESENTE ----
+    {
+      id: 'brig-caixinha-presente', categoryId: 'caixas', name: 'Caixinha de Brigadeiros',
+      description: 'Seleção de brigadeiros gourmet sortidos em uma caixa presente. Perfeita para presentear.',
+      price: 25.00, unit: 'caixa', minQty: null,
+      detail: 'Caixa presente', image: 'images/Caixinha de Brigadeiros.png', placeholderHue: 'cacau'
+    },
+
+    // ---- BOMBONS ---- (R$ 10,00/un)
     {
       id: 'bombom-morango', categoryId: 'bombons', name: 'Bombom de Morango',
       description: 'Morango fresco selecionado coberto com chocolate belga temperado.',
-      price: 7.00, unit: 'un', minQty: 12,
+      price: 10.00, unit: 'un', minQty: 12,
       detail: null, image: 'images/Bombom de Morango.jpeg', placeholderHue: 'morango'
+    },
+    {
+      id: 'bombom-coxinha-ninho', categoryId: 'bombons', name: 'Coxinha de Ninho com Morango',
+      description: 'Morango fresco envolto em creme de leite ninho, no formato charmoso de coxinha.',
+      price: 10.00, unit: 'un', minQty: 12,
+      detail: null, image: 'images/Coxinha de ninho com morango.jpeg', placeholderHue: 'ninho'
+    },
+    {
+      id: 'bombom-coxinha-ferreiro', categoryId: 'bombons', name: 'Coxinha Ferreiro com Morango',
+      description: 'Morango fresco com creme ferreiro de chocolate e avelã, no formato de coxinha.',
+      price: 10.00, unit: 'un', minQty: 12,
+      detail: null, image: 'images/Coxinha ferreiro com morango.jpeg', placeholderHue: 'cacau'
     },
 
     // ---- PUDINS ----
@@ -914,25 +995,38 @@
       detail: null, image: 'images/Pudim.jpeg', placeholderHue: 'limao'
     },
 
-    // ---- SOBREMESAS & TAÇAS ----
-    // NOTE: preços abaixo são padrão estimado — ajuste conforme sua tabela real.
+    // ---- DOCES FINOS ----
     {
-      id: 'sobremesa-taca-ninho', categoryId: 'sobremesas', name: 'Taça Mousse de Ninho',
-      description: 'Mousse aerada de leite ninho com morangos e raspas de chocolate. Servida em taça.',
-      price: 16.00, unit: 'un', minQty: null,
-      detail: 'Porção individual', image: 'images/Taça mousse de ninho com morangos e chocolate.jpeg', placeholderHue: 'ninho'
+      id: 'fino-camafeu', categoryId: 'doces-finos', name: 'Camafeu',
+      description: 'Brigadeiro de nozes com noz inteira, delicado e sofisticado.',
+      price: 6.00, unit: 'un', minQty: null,
+      detail: null, image: 'images/Camafeu.jpeg', placeholderHue: 'ninho'
     },
     {
-      id: 'sobremesa-pavlova', categoryId: 'sobremesas', name: 'Pavlova de Frutas Vermelhas',
+      id: 'fino-gota-maracuja', categoryId: 'doces-finos', name: 'Gota de Maracujá',
+      description: 'Recheio tropical cítrico com borda crocante. Equilíbrio entre doce e azedo.',
+      price: 6.00, unit: 'un', minQty: null,
+      detail: null, image: 'images/Gota de maracujá.jpeg', placeholderHue: 'maracuja'
+    },
+    {
+      id: 'fino-pavlova', categoryId: 'doces-finos', name: 'Pavlova de Frutas Vermelhas',
       description: 'Merengue crocante por fora e macio por dentro, com chantilly e frutas vermelhas frescas.',
       price: 18.00, unit: 'un', minQty: null,
       detail: 'Porção individual', image: 'images/Pavilova de frutas vermelhas.jpeg', placeholderHue: 'rose'
     },
     {
-      id: 'sobremesa-cachepo', categoryId: 'sobremesas', name: 'Cachepô de Chocolate com Cereja',
+      id: 'fino-cachepo', categoryId: 'doces-finos', name: 'Cachepô de Chocolate com Cereja',
       description: 'Casquinha de chocolate recheada com creme e cereja. Servido em cachepô individual.',
       price: 15.00, unit: 'un', minQty: null,
       detail: 'Porção individual', image: 'images/Cachepô de chocolate com cereja.jpeg', placeholderHue: 'cacau'
+    },
+
+    // ---- SOBREMESAS & TAÇAS ----
+    {
+      id: 'sobremesa-taca-ninho', categoryId: 'sobremesas', name: 'Taça Mousse de Ninho',
+      description: 'Mousse aerada de leite ninho com morangos e raspas de chocolate. Servida em taça.',
+      price: 16.00, unit: 'un', minQty: null,
+      detail: 'Porção individual', image: 'images/Taça mousse de ninho com morangos e chocolate.jpeg', placeholderHue: 'ninho'
     }
   ];
 
