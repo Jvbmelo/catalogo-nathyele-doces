@@ -901,7 +901,7 @@
       packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 95 }, { id: 'cento', label: 'Cento', units: 100, price: 180 } ] },
     { id: 'caixas',            label: 'Caixa Presente',           note: 'Caixa montada para presentear' },
     { id: 'bombons',           label: 'Bombons',                  note: 'Morango fresco e selecionado coberto com chocolate, feitos no capricho' },
-    { id: 'pudins',            label: 'Pudins',                   note: 'Formato família (serve 8 a 10 pessoas) disponível sob consulta' },
+    { id: 'pudins',            label: 'Pudins',                   note: 'Tamanho família — serve mais de 10 pedaços' },
     { id: 'doces-finos',       label: 'Doces Finos',              note: 'Doces finos artesanais feitos sob encomenda' },
     { id: 'sobremesas',        label: 'Sobremesas & Taças',       note: 'Sobremesas individuais feitas sob encomenda' }
   ];
@@ -1060,30 +1060,35 @@
       id: 'fino-camafeu', categoryId: 'doces-finos', name: 'Camafeu',
       description: 'Brigadeiro de nozes com noz inteira, delicado e sofisticado.',
       price: 3.00, unit: 'un', minQty: null,
+      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 115 }, { id: 'cento', label: 'Cento', units: 100, price: 215 } ],
       detail: null, image: 'images/Camafeu.jpeg', placeholderHue: 'ninho'
     },
     {
       id: 'fino-gota-maracuja', categoryId: 'doces-finos', name: 'Gota de Maracujá',
       description: 'Recheio de creme de maracujá fresco com geleia de maracujá por cima.',
       price: 3.50, unit: 'un', minQty: null,
+      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 135 }, { id: 'cento', label: 'Cento', units: 100, price: 250 } ],
       detail: null, image: 'images/Gota de maracujá.jpeg', placeholderHue: 'maracuja'
     },
     {
       id: 'fino-pavlova', categoryId: 'doces-finos', name: 'Pavlova de Frutas Vermelhas',
       description: 'Casquinha de suspiro com recheio de ninho e geleia de frutas vermelhas dentro.',
       price: 6.50, unit: 'un', minQty: null,
+      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 245 }, { id: 'cento', label: 'Cento', units: 100, price: 465 } ],
       detail: 'Porção individual', image: 'images/Pavilova de frutas vermelhas.jpeg', placeholderHue: 'rose'
     },
     {
       id: 'fino-cachepo', categoryId: 'doces-finos', name: 'Cachepô de Chocolate com Cereja',
       description: 'Casquinha de chocolate recheada com creme e cereja. Servido em cachepô individual.',
       price: 3.50, unit: 'un', minQty: null,
+      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 135 }, { id: 'cento', label: 'Cento', units: 100, price: 250 } ],
       detail: 'Porção individual', image: 'images/Cachepô de chocolate com cereja.jpeg', placeholderHue: 'cacau'
     },
     {
       id: 'fino-copinho-limao', categoryId: 'doces-finos', name: 'Copinho de Limão',
       description: 'Copinho cremoso de limão, cítrico e refrescante na medida certa.',
       price: 3.50, unit: 'un', minQty: null,
+      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 135 }, { id: 'cento', label: 'Cento', units: 100, price: 250 } ],
       detail: 'Porção individual', image: null, placeholderHue: 'limao'
     },
 
@@ -1123,6 +1128,7 @@
   function findProduct(id) { return PRODUCTS.find(p => p.id === id) || null; }
   function findCategory(id) { return CATEGORIES.find(c => c.id === id) || null; }
   function productPackages(product) {
+    if (product.packages && product.packages.length) return product.packages;
     const cat = findCategory(product.categoryId);
     return (cat && cat.packages && cat.packages.length) ? cat.packages : null;
   }
