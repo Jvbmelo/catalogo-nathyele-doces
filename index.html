@@ -902,8 +902,8 @@
     { id: 'caixas',            label: 'Caixa Presente',           note: 'Caixa montada para presentear' },
     { id: 'bombons',           label: 'Bombons',                  note: 'Morango fresco e selecionado coberto com chocolate, feitos no capricho' },
     { id: 'pudins',            label: 'Pudins',                   note: 'Tamanho família — serve mais de 10 pedaços' },
-    { id: 'doces-finos',       label: 'Doces Finos',              note: 'Doces finos artesanais feitos sob encomenda' },
-    { id: 'sobremesas',        label: 'Sobremesas & Taças',       note: 'Sobremesas individuais feitas sob encomenda' }
+    { id: 'doces-finos',       label: 'Doces Finos',              note: 'Doces finos artesanais · pedido mínimo de 20 unidades por sabor' },
+    { id: 'sobremesas',        label: 'Sobremesas & Taças',       note: 'Sobremesas feitas sob encomenda' }
   ];
 
   const PRODUCTS = [
@@ -1059,36 +1059,31 @@
     {
       id: 'fino-camafeu', categoryId: 'doces-finos', name: 'Camafeu',
       description: 'Brigadeiro de nozes com noz inteira, delicado e sofisticado.',
-      price: 3.00, unit: 'un', minQty: null,
-      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 115 }, { id: 'cento', label: 'Cento', units: 100, price: 215 } ],
+      price: 3.00, unit: 'un', minQty: 20,
       detail: null, image: 'images/Camafeu.jpeg', placeholderHue: 'ninho'
     },
     {
       id: 'fino-gota-maracuja', categoryId: 'doces-finos', name: 'Gota de Maracujá',
       description: 'Recheio de creme de maracujá fresco com geleia de maracujá por cima.',
-      price: 3.50, unit: 'un', minQty: null,
-      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 135 }, { id: 'cento', label: 'Cento', units: 100, price: 250 } ],
+      price: 3.50, unit: 'un', minQty: 20,
       detail: null, image: 'images/Gota de maracujá.jpeg', placeholderHue: 'maracuja'
     },
     {
       id: 'fino-pavlova', categoryId: 'doces-finos', name: 'Pavlova de Frutas Vermelhas',
       description: 'Casquinha de suspiro com recheio de ninho e geleia de frutas vermelhas dentro.',
-      price: 6.50, unit: 'un', minQty: null,
-      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 245 }, { id: 'cento', label: 'Cento', units: 100, price: 465 } ],
+      price: 6.50, unit: 'un', minQty: 20,
       detail: 'Porção individual', image: 'images/Pavilova de frutas vermelhas.jpeg', placeholderHue: 'rose'
     },
     {
       id: 'fino-cachepo', categoryId: 'doces-finos', name: 'Cachepô de Chocolate com Cereja',
       description: 'Casquinha de chocolate recheada com creme e cereja. Servido em cachepô individual.',
-      price: 3.50, unit: 'un', minQty: null,
-      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 135 }, { id: 'cento', label: 'Cento', units: 100, price: 250 } ],
+      price: 3.50, unit: 'un', minQty: 20,
       detail: 'Porção individual', image: 'images/Cachepô de chocolate com cereja.jpeg', placeholderHue: 'cacau'
     },
     {
       id: 'fino-copinho-limao', categoryId: 'doces-finos', name: 'Copinho de Limão',
       description: 'Copinho cremoso de limão, cítrico e refrescante na medida certa.',
-      price: 3.50, unit: 'un', minQty: null,
-      packages: [ { id: 'meio', label: 'Meio cento', units: 50, price: 135 }, { id: 'cento', label: 'Cento', units: 100, price: 250 } ],
+      price: 3.50, unit: 'un', minQty: 20,
       detail: 'Porção individual', image: null, placeholderHue: 'limao'
     },
 
@@ -1096,8 +1091,8 @@
     {
       id: 'sobremesa-taca-ninho', categoryId: 'sobremesas', name: 'Taça Mousse de Ninho',
       description: 'Mousse aerada de leite ninho com morangos e raspas de chocolate. Servida em taça.',
-      price: 16.00, unit: 'un', minQty: null,
-      detail: 'Porção individual', image: 'images/Taça mousse de ninho com morangos e chocolate.jpeg', placeholderHue: 'ninho'
+      price: 115.00, unit: 'un', minQty: null,
+      detail: 'Tamanho família · serve 8 pessoas', image: 'images/Taça mousse de ninho com morangos e chocolate.jpeg', placeholderHue: 'ninho'
     }
   ];
 
