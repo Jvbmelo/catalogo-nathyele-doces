@@ -1379,7 +1379,9 @@
     if (existing) {
       existing.qty += 1;
     } else {
-      bag.set(key, { product, format, qty: 1 });
+      // Unidade respeita o pedido mínimo do produto; pacotes começam em 1.
+      const startQty = (format.id === 'un') ? (product.minQty || 1) : 1;
+      bag.set(key, { product, format, qty: startQty });
     }
     saveBag();
     updateBagButton(true);
@@ -1396,7 +1398,9 @@
   function decrementQty(key) {
     const it = bag.get(key);
     if (!it) return;
-    if (it.qty <= 1) {
+    // Unidade não desce abaixo do mínimo do produto; abaixo disso, remove.
+    const floor = (it.format.id === 'un') ? (it.product.minQty || 1) : 1;
+    if (it.qty <= floor) {
       bag.delete(key);
     } else {
       it.qty -= 1;
