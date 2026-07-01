@@ -1436,20 +1436,25 @@
      WHATSAPP
      ============================================================ */
   function buildWhatsAppMessage() {
-    const lines = ['Olá Nathyele! Tenho interesse em fazer um pedido:', ''];
+    const lines = ['Olá Nathyele! Gostaria de fazer este pedido:', ''];
+    let total = 0;
     bag.forEach(({ product, format, qty }) => {
+      const lineTotal = format.price * qty;
+      total += lineTotal;
       if (format.id === 'un') {
-        lines.push(`• ${qty}x ${product.name}`);
+        lines.push(`• ${qty}x ${product.name} — ${formatBRL(lineTotal)}`);
       } else {
-        lines.push(`• ${qty}x ${format.label} de ${product.name} (${format.units} un) — ${formatBRL(format.price)}`);
+        lines.push(`• ${qty}x ${format.label} de ${product.name} (${format.units} un) — ${formatBRL(lineTotal)}`);
       }
     });
+    lines.push('');
+    lines.push(`Total: ${formatBRL(total)}`);
     if (observations.text.trim()) {
       lines.push('');
       lines.push('Observações: ' + observations.text.trim());
     }
     lines.push('');
-    lines.push('Pode me passar mais informações e valores?');
+    lines.push('Pode confirmar a disponibilidade e a forma de entrega/pagamento?');
     return lines.join('\n');
   }
   function openWhatsAppConfirm() {
