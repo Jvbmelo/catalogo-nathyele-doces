@@ -561,6 +561,14 @@
     border-top: 1px solid var(--cacau-08);
     background: var(--creme);
   }
+  .bag-notice {
+    font-family: var(--ff-body);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--cacau-70);
+    text-align: center;
+    margin-bottom: var(--space-3);
+  }
 
   /* Itens na sacola */
   .bag-item {
@@ -891,7 +899,8 @@
     whatsappDisplay: '(62) 9 9293-6152',
     instagram: '@nathyeledoce',
     location: 'Aparecida de Goiânia · GO',
-    tagline: 'Perfeito do jeito que você merece'
+    tagline: 'Perfeito do jeito que você merece',
+    pickupNotice: 'Apenas retirada no local (Setor Serra Dourada 3, Aparecida de Goiânia) — não realizamos entregas. Não recomendamos retirada por moto; em caso de retirada por terceiros, dano ou perda no transporte é de responsabilidade do cliente.'
   };
 
   const CATEGORIES = [
@@ -903,7 +912,9 @@
     { id: 'bombons',           label: 'Bombons',                  note: 'Morango fresco e selecionado coberto com chocolate, feitos no capricho' },
     { id: 'pudins',            label: 'Pudins',                   note: 'Tamanho família — serve mais de 10 pedaços' },
     { id: 'doces-finos',       label: 'Doces Finos',              note: 'Doces finos artesanais · pedido mínimo de 20 unidades por sabor' },
-    { id: 'sobremesas',        label: 'Sobremesas & Taças',       note: 'Sobremesas feitas sob encomenda' }
+    { id: 'sobremesas',        label: 'Sobremesas & Taças',       note: 'Sobremesas feitas sob encomenda' },
+    { id: 'personalizados',    label: 'Personalizados',           note: 'Verificar disponibilidade de temas · Peça com 15 dias de antecedência · Taxa de urgência (7 a 4 dias): +R$20,00',
+      packages: [ { id: '25un', label: '25 unidades', units: 25, price: 80 }, { id: '50un', label: '50 unidades', units: 50, price: 125 }, { id: '100un', label: '100 unidades', units: 100, price: 230 } ] }
   ];
 
   const PRODUCTS = [
@@ -1087,6 +1098,14 @@
       description: 'Mousse aerada de leite ninho com morangos e raspas de chocolate. Servida em taça.',
       price: 115.00, unit: 'un', minQty: null,
       detail: 'Tamanho família · serve 8 pessoas', image: 'images/Taça mousse de ninho com morangos e chocolate.jpeg', placeholderHue: 'ninho'
+    },
+
+    // ---- PERSONALIZADOS ----
+    {
+      id: 'pers-ninho', categoryId: 'personalizados', name: 'Briganinhos',
+      description: 'Brigadeiros sabor ninho ejetados, carimbados e/ou pintados.',
+      price: null, unit: 'un', minQty: 25, hideUnitOption: true,
+      detail: null, image: 'images/personalizados.jpeg', placeholderHue: 'ninho'
     }
   ];
 
@@ -1200,8 +1219,9 @@
     const pkgs = productPackages(product);
     let actionHtml;
     if (pkgs) {
-      const formats = [{ id: 'un', label: 'Unidade', price: product.price }]
-        .concat(pkgs.map(p => ({ id: p.id, label: p.label, price: p.price })));
+      const formats = product.hideUnitOption
+        ? pkgs.map(p => ({ id: p.id, label: p.label, price: p.price }))
+        : [{ id: 'un', label: 'Unidade', price: product.price }].concat(pkgs.map(p => ({ id: p.id, label: p.label, price: p.price })));
       actionHtml = `
           <div class="fmt-options" role="group" aria-label="Escolha o formato">
             ${formats.map(f => `
@@ -1335,6 +1355,7 @@
     `;
 
     foot.innerHTML = `
+      <p class="bag-notice">${escapeHtml(CONFIG.pickupNotice)}</p>
       <button type="button" class="wa-btn" data-action="whatsapp-confirm" aria-label="Fazer pedido pelo WhatsApp">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.88 11.9L4 20l4.2-1.1a7.92 7.92 0 0 0 3.84 1h.01a7.94 7.94 0 0 0 7.95-7.92 7.88 7.88 0 0 0-2.4-5.66zm-5.55 12.21h-.01a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.66.67-2.44-.16-.25a6.59 6.59 0 1 1 12.23-3.5 6.6 6.6 0 0 1-6.63 6.59zm3.62-4.94c-.2-.1-1.18-.58-1.36-.65s-.32-.1-.45.1c-.13.2-.52.65-.63.78-.12.13-.23.15-.43.05a5.42 5.42 0 0 1-2.71-2.37c-.2-.35.2-.32.58-1.08a.37.37 0 0 0-.02-.35c-.05-.1-.45-1.08-.61-1.48-.16-.39-.33-.34-.45-.34l-.39-.01a.75.75 0 0 0-.54.25 2.27 2.27 0 0 0-.7 1.69 3.95 3.95 0 0 0 .82 2.08c.1.13 1.4 2.14 3.4 3 .47.21.85.33 1.14.42.48.15.92.13 1.26.08.39-.06 1.18-.48 1.35-.95.17-.46.17-.86.12-.95-.05-.08-.18-.13-.38-.23z"/>
