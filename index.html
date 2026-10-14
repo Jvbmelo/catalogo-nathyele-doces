@@ -769,16 +769,16 @@
     color: var(--cacau-40);
     font-weight: 500;
   }
-  .dev-credit-text a {
-    color: var(--cacau-70);
-    border-bottom: 1px solid var(--cacau-15);
-    padding-bottom: 1px;
-    transition: color var(--transition), border-color var(--transition);
+  .dev-credit-logo {
+    display: inline-block;
+    margin-top: var(--space-3);
+    padding: var(--space-1);
+    opacity: 0.85;
+    transition: opacity var(--transition);
   }
-  .dev-credit-text a:hover {
-    color: var(--rose-profundo);
-    border-color: var(--rose-profundo);
-  }
+  .dev-credit-logo:hover,
+  .dev-credit-logo:focus-visible { opacity: 1; }
+  .dev-credit-logo img { height: 40px; width: auto; }
 
   /* ============================================================
      BREAKPOINT — tablet/desktop centralizado (mantém formato celular)
@@ -840,10 +840,10 @@
        ============================================================ -->
   <div class="dev-credit">
     <div class="dev-credit-rule" aria-hidden="true"></div>
-    <p class="dev-credit-text">
-      Desenvolvido por
-      <a href="https://instagram.com/joaovitorbm_" target="_blank" rel="noopener" aria-label="Instagram do desenvolvedor João Vitor">@joaovitorbm_</a>
-    </p>
+    <p class="dev-credit-text">Desenvolvido por</p>
+    <a class="dev-credit-logo" href="https://bonifacioconsultoria.com.br" target="_blank" rel="noopener" aria-label="Bonifácio Consultoria — site desenvolvido por Bonifácio">
+      <img src="images/bonifacio-logo.svg" alt="Bonifácio" width="171" height="40" loading="lazy" />
+    </a>
   </div>
 
 </div>
